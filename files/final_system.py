@@ -72,6 +72,7 @@ def execute(evaluate = False, tracking_system = "", color_range = None, max_ball
             source_path = dataset_dir + video_file_format.format(ss)
             # Module "Detection-tracking"
 
+            # import pdb; pdb.set_trace()
             # Preprocessing #
             if tracking_preprocessing:
                 color_range = color_extractor(source_path)
@@ -80,17 +81,17 @@ def execute(evaluate = False, tracking_system = "", color_range = None, max_ball
             if tracking_system == "ColorTrackingMaxBalls":
                 if max_balls == None or color_range == None:
                       raise Exception("ColorTrackingMaxBalls - Wrong parameters")
-                color_tracking_max_balls(source_path, color_range, max_balls = max_balls,visualize=False, save_data=save_data)
+                color_tracking_max_balls(source_path, color_range, max_balls = max_balls,visualize=True, save_data=save_data)
             elif tracking_system == "ColorTrackingV0":
                 if color_range == None:
                      raise Exception("ColorTrackingV0 - Wrong parameters")
-                color_tracking(source_path, color_range, visualize=False, save_data=save_data)
+                color_tracking(source_path, color_range, visualize=True, save_data=save_data)
             elif tracking_system == "BgSubstractionMaxBalls":
                 if max_balls == None:
                     raise Exception("BgSubstractionMaxBalls - Wrong parameters")
-                bg_substraction_tracking_max_balls(source_path, max_balls=max_balls, visualize=False, save_data=save_data)
+                bg_substraction_tracking_max_balls(source_path, max_balls=max_balls, visualize=True, save_data=save_data)
             elif tracking_system == "BgSubstractionV0":
-                bg_substraction_tracking(source_path, visualize=False, save_data=save_data)
+                bg_substraction_tracking(source_path, visualize=True, save_data=save_data)
             else:
                 raise Exception("Wrong tracking system")
 

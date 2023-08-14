@@ -129,10 +129,16 @@ dmypy.json
 .pyre/
 
 # dataset
-dataset/
+dataset/tanda2/*
 
 # result videos
 AlejandroAlonso/results/videos
 
 # mot16 optimizer
 AlejandroAlonso/results/mot16/Optimizer*
+
+results/videos/*
+
+results/mot16/Tracking/*
+
+.autovenv

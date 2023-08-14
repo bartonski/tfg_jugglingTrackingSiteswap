@@ -73,6 +73,9 @@ def fill_contours(contours):
 def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_mul_threshold=0.21, visualize=False):
     cap = cv2.VideoCapture(source_path)
 
+    if(cap.isOpened()==False):
+        print( f'Cannot open {source_path}.' )
+
     # Object detection from stable camera
     object_detector = cv2.createBackgroundSubtractorMOG2(
                         history=100,
@@ -173,7 +176,7 @@ def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_m
 
 
 if __name__ == "__main__":
-    source_path = '/home/alex/tfg_jugglingTrackingSiteswap/dataset/tanda2/ss7corto_red2_AlejandroAlonso.mp4'
-    #source_path = '/home/alex/tfg_jugglingTrackingSiteswap/dataset/jugglingLab/ss4_red_JugglingLab.mp4'
+    source_path = './dataset/tanda2/ss7corto_red2_AlejandroAlonso.mp4'
+    #source_path = './dataset/jugglingLab/ss4_red_JugglingLab.mp4'
     print(point_extractor(source_path, visualize=False, min_contour_area=3000))
     # TODO limitar el tiempo, por ejemplo los 10 segundos del medio o algo así

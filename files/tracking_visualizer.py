@@ -5,22 +5,22 @@ import tracking.data_saver_files.mot16_utils as mu
 import numpy as np
 from PIL import Image
 
-save_dir='/home/alex/tfg_jugglingTrackingSiteswap/results/'
-dataset_dir='/home/alex/tfg_jugglingTrackingSiteswap/dataset/tanda2/'
-output_path='/home/alex/tfg_jugglingTrackingSiteswap/results/videos/'
+save_dir='./results/'
+dataset_dir='./dataset/tanda2/'
+output_path='./results/videos/'
 
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/tracking_short_ColorTracking.xlsx'
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/tracking_short_manual.xlsx'
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/tracking_ss3_red_AlejandroAlonso_ColorTracking.xlsx'
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/tracking_ss5_red_AlejandroAlonso_ColorTracking.xlsx'
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/50.xlsx'
+#path_book = './AlejandroAlonso/results/excels/tracking_short_ColorTracking.xlsx'
+#path_book = './AlejandroAlonso/results/excels/tracking_short_manual.xlsx'
+#path_book = './AlejandroAlonso/results/excels/tracking_ss3_red_AlejandroAlonso_ColorTracking.xlsx'
+#path_book = './AlejandroAlonso/results/excels/tracking_ss5_red_AlejandroAlonso_ColorTracking.xlsx'
+#path_book = './AlejandroAlonso/results/excels/50.xlsx'
 
-#path_book = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/mot16/GroundTruth/3_manual.txt'
-#path_book1 = '/home/alex/tfg_jugglingTrackingSiteswap/AlejandroAlonso/results/excels/tracking_ss3_red_AlejandroAlonso_ColorTracking.xlsx'
+#path_book = './AlejandroAlonso/results/mot16/GroundTruth/3_manual.txt'
+#path_book1 = './AlejandroAlonso/results/excels/tracking_ss3_red_AlejandroAlonso_ColorTracking.xlsx'
 
-#source_path='/home/alex/tfg_jugglingTrackingSiteswap/dataset/tests/short.mp4' # Url of source video
-#source_path='/home/alex/tfg_jugglingTrackingSiteswap/dataset/ss3_red_AlejandroAlonso.mp4' # Url of source video
-#source_path='/home/alex/tfg_jugglingTrackingSiteswap/dataset/ss5_red_AlejandroAlonso.mp4' # Url of source video
+#source_path='./dataset/tests/short.mp4' # Url of source video
+#source_path='./dataset/ss3_red_AlejandroAlonso.mp4' # Url of source video
+#source_path='./dataset/ss5_red_AlejandroAlonso.mp4' # Url of source video
 
 
 
@@ -30,8 +30,10 @@ def getDistinctColors(id, num_balls):
     r, g, b = cv2.cvtColor(np.uint8([[[h / 2, 255, 255]]]), cv2.COLOR_HSV2BGR)[0][0]
     return (int(r), int(g), int(b))
 
+#def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualize=True,\
+#                        square_len=50, video_source = 'red_AlejandroAlonso', point=None, trayectory_limit = 10, file_mode=2):
 def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualize=True,\
-                        square_len=50, video_source = 'red_AlejandroAlonso', point=None, trayectory_limit = 10, file_mode=2):
+                        square_len=50, video_source = 'blue_barton', point=None, trayectory_limit = 10, file_mode=2):
     
     if file_mode==1:
         save_dir+='excels/'
@@ -126,19 +128,20 @@ def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualiz
     if visualize:
         cv2.destroyAllWindows()
 
-    print("Vide saved in: ", out_name)
+    print("Video saved in: ", out_name)
 
 if __name__ == "__main__":
-    ss = '7'
+    ss = '3'
     system = 'ColorTrackingMaxBalls'
     #system = 'BgSubstractionV0'
     #system = 'BgSubstractionMaxBalls'
     #system = 'ColorTrackingV0'
 
-    video_source = 'red2_AlejandroAlonso'
+    #video_source = 'green_barton'
+    video_source = 'blue_barton'
     #video_source = 'red_JugglingLab'
 
-    visualize=False
+    visualize=True
     square_len=50
     trayectory_limit = 4
     file_mode=2
