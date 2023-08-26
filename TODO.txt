@@ -27,7 +27,15 @@ Si saco un mapa de calor de BGSubstraction sin filtrar nada, tendré mucha densi
 Esto me puede servir para saber sobre la zona de las manos. Se pone una rayita vertical justo en medio, y otra horizontal justo encima.
 Cualquier trayectoria que atraviese la horizontal es un lanzamiento, cualquiera que atraviese la vertical de abajo a arriba también
 
+-- SMALL STUFF
+
+- Remove hard coded paths
+- Translate comments into English
+- Get screen size, so that visualizations can be displayed at a decent size. See
+[How do I get monitor resolution in Python?](https://stackoverflow.com/a/31171430/266747)
+
 -- TERMINADO
+
 -16 Mejorar preprocesado
     - Sacar color automáticamente funciona relativamente bien
 -15 Crear un módulo de preprocesado de vídeo

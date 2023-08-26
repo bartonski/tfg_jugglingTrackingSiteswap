@@ -81,14 +81,54 @@ With that and all dependencies installed, the application should work. If you en
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-For the execution of the final system, it is enough to open a terminal in .../tfg_jugglingTrackingSiteswap and execute:
+### `final_system.py`
+
+For the execution of the final system, it is enough to open a terminal in `.../tfg_jugglingTrackingSiteswap` and execute:
 
 ```bash
 python3 files/final_system.py
 ```
 
-Any tracking system can be executed on their own in a similar way as if they were main programs. The same thing goes with the tracking_visualizer.
+Any tracking system can be executed on their own in a similar way as if they were main programs. The same thing goes with the `tracking_visualizer`.
 
+### `config_writer.py`
+
+This is a proof-of-concept configuration writer.
+
+```
+usage: config_writer.py [-h] [--project_path PROJECT PATH]
+                        [--config_file CONFIG FILE]
+                        VIDEO FILE
+
+positional arguments:
+  VIDEO FILE            Input video file
+
+options:
+  -h, --help            show this help message and exit
+  --project_path PROJECT PATH
+                        Path to juggle tracking project
+  --config_file CONFIG FILE
+                        Configuration file name
+
+```
+
+* `--project_path` defaults to `./project`
+* `--config_file` defaults to `config.yml` inside `--project_path`
+
+
+#### Example
+
+```bash
+python files/config_writer.py --project_path ~/Videos/juggling/20230806 ~/Videos/juggling/20230806/ss3_blue_barton.mp4
+```
+
+Since `--config_file` is not specified, it defaults to config.yml, i.e. ~/Videos/juggling/20230806/config.yml. 
+
+The configuration file **must** exist, although it may be empty. If it does not,it can be fixed by using `touch`, e.g.
+
+```bash
+touch ~/Videos/juggling/20230806/config.yml
+```
 
 
 <!-- LICENSE -->
