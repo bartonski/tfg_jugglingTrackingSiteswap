@@ -22,7 +22,7 @@ with open( config_file, 'r' ) as f:
         config = config_tmp
 
 video = {}
-pause_video = 1
+frame_delay = 1 # delay in milliseconds between frames, or 0 to wait indefinitely for keypress.
 toggle = [1, 0]
 
 # Set-up -----------------------------------------------------------------------
@@ -103,7 +103,7 @@ while ret:
 
     image = frame
 
-    while pause_video == 1 and key != 27:
+    while frame_delay == 0 and key != 27:
         imageHSV = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
         h_min = cv2.getTrackbarPos("Hue Min","Stacked Images")
         h_max = cv2.getTrackbarPos("Hue Max", "Stacked Images")
@@ -120,22 +120,20 @@ while ret:
 
         imageStack = stackImages(0.33,([image,imageHSV],[mask,imageResult]))
         cv2.imshow("Stacked Images", imageStack)
-        key = cv2.waitKey(pause_video)
+        key = cv2.pollKey()
         if key == 27:
             break
         elif key == ord(' '):
-            pause_video = toggle[pause_video]
-        elif key == ord('f'):
-            pause_video = 0
+            frame_delay = toggle[frame_delay]
 
     if key == 27:
         break
 
-    key = cv2.waitKey(pause_video)
+    key = cv2.waitKey(frame_delay)
     if key == ord(' '):
-        pause_video = toggle[pause_video]
+        frame_delay = toggle[frame_delay]
     elif key == ord('f'):
-        pause_video = 0
+        frame_delay = 0
 
     imageHSV = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
     lower = np.array(color_range[:3])
