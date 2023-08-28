@@ -129,7 +129,20 @@ The configuration file **must** exist, although it may be empty. If it does not,
 ```bash
 touch ~/Videos/juggling/20230806/config.yml
 ```
+#### Using the GUIe
 
+When you run `config_writer.py`, it wihll first check the configuration file to
+see if any color ranges have been defined. If there are none (such as on the first run, when the configuration file is empty), it will call the color\_extractor module, which reads each frame of the video, makes guesses about objects that might be part of the juggling pattern, and returns an color range that should do a decent job of identifying juggling props.
+
+Config writer will use these ranges as a starting point for color ranges that more accurately identify juggling props and exclude everything else.
+
+When the program starts, video will be playing. Pressing the space bar pauses the video, and allows you to manipulate the color ranges by specifying min and max hue (color, as on a color wheel), value (think of a gray scale image where value of 0 is black and value of 255 is white ), and saturation (the intensity of the color, from 0 (white) to 255 (full intensity).
+
+These are manipulated using sliders. The original image frame shows top/left, the mask (a black and white image where black areas are removed and white areas are kept) shows bottom/left, and the result (which should only show the props themselves) is displayed bottom/right.
+
+Pressing the space bar will re-start the video. You can pause to edit the color range and resume playing as many times as you want.
+
+To quit playing the video and saving the color range, press `<esc>`.
 
 <!-- LICENSE -->
 ## License
