@@ -131,7 +131,7 @@ touch ~/Videos/juggling/20230806/config.yml
 ```
 #### Using the GUIe
 
-When you run `config_writer.py`, it wihll first check the configuration file to
+When you run `config_writer.py`, it will first check the configuration file to
 see if any color ranges have been defined. If there are none (such as on the first run, when the configuration file is empty), it will call the color\_extractor module, which reads each frame of the video, makes guesses about objects that might be part of the juggling pattern, and returns an color range that should do a decent job of identifying juggling props.
 
 Config writer will use these ranges as a starting point for color ranges that more accurately identify juggling props and exclude everything else.
