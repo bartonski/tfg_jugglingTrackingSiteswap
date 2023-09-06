@@ -100,6 +100,13 @@ key = None
 while ret:
 
     # do stuff
+    # 1. Get start frame
+    # 2. Crop frame
+    # 3. Get pattern ROI
+    # 4. Get left and right hand ROI
+    # 5. Get ball color range
+    # 6. Get hand color range
+    # 7. Get end frame
 
     image = frame
 
@@ -145,6 +152,26 @@ while ret:
     ret, frame = cap.read()
 
 config['color_range'] = color_range
+
+## Configuration file requirements
+#  Site swaps array
+#  tracking_systems array
+#  color_range
+#  table_field_names
+#  evaluate each iteration
+#  tracking_preprocessing
+#  max_cuadrant_misses
+#  Number of tries to test the period of a string
+#  max period threshold
+#  decimal round
+#  save_data (1: Excel 2: mot16)
+#  gt_dir (ground truth data dir)
+#  tracking_dir (tracking data files)
+#  dataset_dir (where to find video)
+#  video_file_format
+#  gt_file_format
+#  tracking_file_format
+
 with open( config_file, 'w' ) as f:
     yaml.dump(config, f)
 cap.release()
