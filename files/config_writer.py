@@ -4,6 +4,7 @@ import numpy as np
 import sys
 import arguments
 import yaml
+from pathlib import Path
 
 # Arguments and Configuration --------------------------------------------------
 
@@ -11,7 +12,8 @@ parser = arguments.parser
 argv = sys.argv[1:]
 a = parser.parse_args( argv )
 print( f"a: {a}")
-config_file = f"{a.project_path}/{a.config_file}"
+project_path = Path( a.project_path )
+config_file = project_path / a.config_file
 print( f"config_file: {config_file}")
 
 config = {}
