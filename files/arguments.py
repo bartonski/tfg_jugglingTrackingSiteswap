@@ -11,6 +11,26 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--dataset_dir',
+    metavar='DATASET DIR', type=str,
+    help='Path to juggling data'
+)
+
+parser.add_argument(
+    '--siteswap',
+    metavar='SITE SWAP', type=str,
+    help='Manually entered site swap',
+    default=''
+)
+
+parser.add_argument(
+    '--system',
+    metavar='TRACKING SYSTEM', type=str,
+    help='Tracking System',
+    default='ColorTrackingMaxBalls'
+)
+
+parser.add_argument(
     '--config_file',
     metavar='CONFIG FILE', type=str,
     help='Configuration file name',

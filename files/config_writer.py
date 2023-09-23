@@ -24,6 +24,37 @@ with open( config_file, 'r' ) as f:
         config = config_tmp
 
 video = {}
+siteswap = []
+dataset_dir = None
+
+def get_video_file_path( v, dataset_dir ):
+    path = Path( v )
+    if path.parent.samefile('.') and dataset_dir:
+        return ( Path ( a.dataset_dir / vfp.name ) )
+    return ( path )
+
+# Load data from config.
+
+#  Site swaps array -- DONE
+#  tracking_systems array -- DONE
+#  color_range -- DONE
+#  dataset_dir (where to find video) -- DONE
+#
+
+if config:
+    video = config['video']
+    siteswap = config.get('siteswap')
+
+if a.siteswap:
+    config['siteswap'] = [ a.siteswap ]
+
+if a.system:
+    config['tracking_systems'] = [ a.system ]
+
+video_file_path = get_video_file_path( a.video_file, a.dataset_dir )
+video['video_source'] = video_file_path.name
+video['dataset_dir'] = f"{video_file_path.parent}"
+
 frame_delay = 1 # delay in milliseconds between frames, or 0 to wait indefinitely for keypress.
 toggle = [1, 0]
 
@@ -155,24 +186,48 @@ while ret:
 
 config['color_range'] = color_range
 
-## Configuration file requirements
-#  Site swaps array
-#  tracking_systems array
-#  color_range
-#  table_field_names
+## Configuration from final_system.py
+
+config['table_field_names'] = [
+    "ss", "MOTP", "MOTA", "Presence",
+    "Prediction", "System used", "Num misses (cuadrants)", "Works"
+]
+
 #  evaluate each iteration
+config['evaluate'] = True
+
 #  tracking_preprocessing
-#  max_cuadrant_misses
+config['tracking_preprocessing'] = True
+
+#  max quadrant misses
+config['max_cuadrant_misses'] = 0.49
+
 #  Number of tries to test the period of a string
+config['ss_test_numbers'] = 5
+
 #  max period threshold
+config['max_perido_threshold'] = 1.5
+
 #  decimal round
+config['decimal_round'] = 3
+
 #  save_data (1: Excel 2: mot16)
+config['save_data'] = 2
+
 #  gt_dir (ground truth data dir)
+config['gt_dir'] = 'results/mot16/GroundTruth/'
+
 #  tracking_dir (tracking data files)
-#  dataset_dir (where to find video)
+config['tracking_dir'] = 'results/mot16/Tracking/'
+
 #  video_file_format
+config['video_file_format'] = 'ss{}_red2_AlejandroAlonso.mp4'
+
 #  gt_file_format
+config['gt_file_format'] = '{}_manual2.txt'
+
 #  tracking_file_format
+config['tracking_file_format'] = '{}_{}.txt'
 
 with open( config_file, 'w' ) as f:
     yaml.dump(config, f)
