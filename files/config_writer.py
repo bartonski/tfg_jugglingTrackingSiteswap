@@ -51,6 +51,10 @@ if a.siteswap:
 if a.system:
     config['tracking_systems'] = [ a.system ]
 
+config['save_dir'] = a.save_dir
+config['output_path'] = a.output_path
+config['visualize'] = a.visualize
+
 video_file_path = get_video_file_path( a.video_file, a.dataset_dir )
 video['video_source'] = video_file_path.name
 video['dataset_dir'] = f"{video_file_path.parent}"

@@ -24,6 +24,27 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--save_dir',
+    metavar='SAVE DIR', type=str,
+    help='Where to save meta-data',
+    default='results'
+)
+
+parser.add_argument(
+    '--output_path',
+    metavar='SAVE DIR', type=str,
+    help='Where to save output video',
+    default='results/videos'
+)
+
+parser.add_argument(
+    '--visualize',
+    metavar='VISUALIZE', type=bool,
+    help='Whether to display results to the screen',
+    default=False
+)
+
+parser.add_argument(
     '--system',
     metavar='TRACKING SYSTEM', type=str,
     help='Tracking System',
