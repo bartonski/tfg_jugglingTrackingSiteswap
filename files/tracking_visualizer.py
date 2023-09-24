@@ -3,6 +3,9 @@ sys.path.insert(0, '../excel_utils')
 import tracking.data_saver_files.excel_utils as eu
 import tracking.data_saver_files.mot16_utils as mu
 import numpy as np
+import yaml
+import arguments
+from pathlib import Path
 from PIL import Image
 
 save_dir='/home/alex/tfg_jugglingTrackingSiteswap/results/'
@@ -30,25 +33,26 @@ def getDistinctColors(id, num_balls):
     r, g, b = cv2.cvtColor(np.uint8([[[h / 2, 255, 255]]]), cv2.COLOR_HSV2BGR)[0][0]
     return (int(r), int(g), int(b))
 
-def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualize=True,\
-                        square_len=50, video_source = 'red_AlejandroAlonso', point=None, trayectory_limit = 10, file_mode=2):
+def tracking_visualizer(ss, system, save_dir, dataset_dir, video_source,
+                        output_path, visualize=True,
+                        square_len=50, point=None,
+                        trayectory_limit = 10, file_mode=2):
     
     if file_mode==1:
-        save_dir+='excels/'
+        save_dir=save_dir.joinpath('excels/')
     else:
-        save_dir+='mot16/'
+        save_dir=save_dir.joinpath('mot16/')
     if system == 'manual':
-        save_dir+='GroundTruth/'
+        save_dir=save_dir.joinpath('GroundTruth/')
     else:
-        save_dir+='Tracking/'
-    f'{save_dir}{ss}_{system}.txt'
-    path_book = f'{save_dir}{ss}_{system}'
+        save_dir=save_dir.joinpath('Tracking/')
+    path_book = Path( save_dir / f'{ss}_{system}' )
     if file_mode==1:
-        path_book+='.xlsx'
+        path_book=path_book.with_suffix('.xlsx')
     else:
-        path_book+='.txt'
+        path_book=path_book.with_suffix('.txt')
 
-    source_path= f'{dataset_dir}ss{ss}_{video_source}.mp4'
+    source_path = Path( dataset_dir / video_source )
     print(source_path)
     if file_mode==1:
         data,num_balls = eu.load_data(path_book)
@@ -61,11 +65,12 @@ def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualiz
     if visualize:
         cv2.namedWindow('img', cv2.WINDOW_NORMAL)
 
-    cap = cv2.VideoCapture(source_path)
+    cap = cv2.VideoCapture(f'{source_path}')
     _, img = cap.read()
-    out_name=(source_path.split('/')[-1]).split('.')[0]+'_tracking.mp4'
+    out_name=f"{source_path.stem}_tracking.mp4"
     w,h = img.shape[:2]
-    out = cv2.VideoWriter(output_path+out_name, cv2.VideoWriter_fourcc(*"mp4v"), 30, (h*2,w))
+    out = cv2.VideoWriter( f'{Path( output_path / out_name )}',
+                           cv2.VideoWriter_fourcc(*"mp4v"), 30, (h*2,w) )
     num_frame=0
     ret=True
 
@@ -129,19 +134,40 @@ def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualiz
     print("Vide saved in: ", out_name)
 
 if __name__ == "__main__":
-    ss = '7'
-    system = 'ColorTrackingMaxBalls'
-    #system = 'BgSubstractionV0'
-    #system = 'BgSubstractionMaxBalls'
-    #system = 'ColorTrackingV0'
+    parser = arguments.parser
 
-    video_source = 'red2_AlejandroAlonso'
-    #video_source = 'red_JugglingLab'
+    argv = sys.argv[1:]
+    a = parser.parse_args( argv )
+    print( f"a: {a}")
+    project_path = Path( a.project_path )
+    config_file = project_path / a.config_file
+    print( f"config_file: {config_file}")
 
-    visualize=False
+    config = {}
+
+    with open( config_file, 'r' ) as f:
+        config_tmp = yaml.safe_load(f)
+        if config_tmp != None:
+            config = config_tmp
+
+    video = config.get('video')
+    siteswap = config.get('siteswap')
+    dataset_dir = Path( video.get('dataset_dir') )
+    video_source = video.get('video_source')
+    siteswap = config.get('siteswap')
+    ss = siteswap[0]
+    tracking_systems = config.get('tracking_systems')
+    system = tracking_systems[0]
+    save_dir = Path(config.get('save_dir'))
+    output_path = Path(config.get('output_path'))
+
+    visualize=config.get('visualize')
     square_len=50
     trayectory_limit = 4
     file_mode=2
     point = None
 
-    tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, video_source=video_source, visualize=visualize, trayectory_limit=trayectory_limit, file_mode=file_mode, point=point)
+    tracking_visualizer(ss, system, save_dir, dataset_dir, video_source,
+                        output_path, visualize=visualize,
+                        trayectory_limit=trayectory_limit,
+                        file_mode=file_mode, point=point)
