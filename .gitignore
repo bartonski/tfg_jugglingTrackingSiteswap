@@ -109,6 +109,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.venv.bak/
+.autovenv
 
 # Spyder project settings
 .spyderproject
@@ -131,8 +133,21 @@ dmypy.json
 # dataset
 dataset/
 
+## Program Output
+
+# Configuration File
+files/config.yml
+
+# Results
+results/
+results/mot16/Tracking/
+
 # result videos
 AlejandroAlonso/results/videos
 
 # mot16 optimizer
 AlejandroAlonso/results/mot16/Optimizer*
+
+# users
+
+users/
