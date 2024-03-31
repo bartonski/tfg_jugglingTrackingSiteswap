@@ -4,9 +4,12 @@ import numpy as np
 import sys
 import arguments
 import yaml
+from tools.stack_images import stackImages
 from pathlib import Path
 
 # Arguments and Configuration --------------------------------------------------
+
+# TODO: A bunch of this could be moved into another module.
 
 parser = arguments.parser
 argv = sys.argv[1:]
@@ -15,6 +18,8 @@ print( f"a: {a}")
 project_path = Path( a.project_path )
 config_file = project_path / a.config_file
 print( f"config_file: {config_file}")
+if not config_file.exists:
+    config_file.touch(mode=644)
 
 config = {}
 
@@ -30,7 +35,7 @@ dataset_dir = None
 def get_video_file_path( v, dataset_dir ):
     path = Path( v )
     if path.parent.samefile('.') and dataset_dir:
-        return ( Path ( a.dataset_dir / vfp.name ) )
+        return ( Path ( a.dataset_dir / path.name ) )
     return ( path )
 
 # Load data from config.
@@ -64,40 +69,8 @@ toggle = [1, 0]
 
 # Set-up -----------------------------------------------------------------------
 
-def stackImages(scale,imgArray):
-    rows = len(imgArray)
-    cols = len(imgArray[0])
-    rowsAvailable = isinstance(imgArray[0], list)
-    width = imgArray[0][0].shape[1]
-    height = imgArray[0][0].shape[0]
-    if rowsAvailable:
-        for x in range ( 0, rows):
-            for y in range(0, cols):
-                if imgArray[x][y].shape[:2] == imgArray[0][0].shape [:2]:
-                    imgArray[x][y] = cv2.resize(imgArray[x][y], (0, 0), None, scale, scale)
-                else:
-                    imgArray[x][y] = cv2.resize(imgArray[x][y], (imgArray[0][0].shape[1], imgArray[0][0].shape[0]), None, scale, scale)
-                if len(imgArray[x][y].shape) == 2: imgArray[x][y]= cv2.cvtColor( imgArray[x][y], cv2.COLOR_GRAY2BGR)
-        imageBlank = np.zeros((height, width, 3), np.uint8)
-        hor = [imageBlank]*rows
-        hor_con = [imageBlank]*rows
-        for x in range(0, rows):
-            hor[x] = np.hstack(imgArray[x])
-        ver = np.vstack(hor)
-    else:
-        for x in range(0, rows):
-            if imgArray[x].shape[:2] == imgArray[0].shape[:2]:
-                imgArray[x] = cv2.resize(imgArray[x], (0, 0), None, scale, scale)
-            else:
-                imgArray[x] = cv2.resize(imgArray[x], (imgArray[0].shape[1], imgArray[0].shape[0]), None,scale, scale)
-            if len(imgArray[x].shape) == 2: imgArray[x] = cv2.cvtColor(imgArray[x], cv2.COLOR_GRAY2BGR)
-        hor= np.hstack(imgArray)
-        ver = hor
-    return ver
-
 def empty(a):
     pass
-
 
 ## Get Color Range
 
@@ -136,14 +109,14 @@ key = None
 
 while ret:
 
-    # do stuff
-    # 1. Get start frame
+    # Use cv2.displayOverlay to display control options
+    # 1. Set start frame
     # 2. Crop frame
     # 3. Get pattern ROI
     # 4. Get left and right hand ROI
     # 5. Get ball color range
     # 6. Get hand color range
-    # 7. Get end frame
+    # 7. Set end frame
 
     image = frame
 
