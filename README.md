@@ -97,6 +97,9 @@ This is a proof-of-concept configuration writer.
 
 ```
 usage: config_writer.py [-h] [--project_path PROJECT PATH]
+                        [--dataset_dir DATASET DIR] [--siteswap SITE SWAP]
+                        [--save_dir SAVE DIR] [--output_path SAVE DIR]
+                        [--visualize VISUALIZE] [--system TRACKING SYSTEM]
                         [--config_file CONFIG FILE]
                         VIDEO FILE
 
@@ -107,14 +110,33 @@ options:
   -h, --help            show this help message and exit
   --project_path PROJECT PATH
                         Path to juggle tracking project
+  --dataset_dir DATASET DIR
+                        Path to juggling data
+  --siteswap SITE SWAP  Manually entered site swap
+  --save_dir SAVE DIR   Where to save meta-data
+  --output_path SAVE DIR
+                        Where to save output video
+  --visualize VISUALIZE
+                        Whether to display results to the screen
+  --system TRACKING SYSTEM
+                        Tracking System
   --config_file CONFIG FILE
                         Configuration file name
 
 ```
 
+If `VIDEO FILE` is in the current directory and `--dataset_dir` is set,
+the configuration file will show `VIDEO FILE` as residing in `--dataset_dir`.
+Otherwise, `dataset_dir` in the configuration will be the parent directory of
+`VIDEO FILE`.
+
 * `--project_path` defaults to `./project`
 * `--config_file` defaults to `config.yml` inside `--project_path`
-
+* `--dataset_dir` defaults to unset.
+* `--siteswap` is the predicted site swap contained in `VIDEO FILE`.
+* `--system` sets the `TRACKING SYSTEM` used to determine the paths of the props
+in the juggling pattern.
+    * TODO: document the possible values of `TRACKING SYSTEM`
 
 #### Example
 
@@ -124,11 +146,6 @@ python files/config_writer.py --project_path ~/Videos/juggling/20230806 ~/Videos
 
 Since `--config_file` is not specified, it defaults to config.yml, i.e. ~/Videos/juggling/20230806/config.yml. 
 
-The configuration file **must** exist, although it may be empty. If it does not,it can be fixed by using `touch`, e.g.
-
-```bash
-touch ~/Videos/juggling/20230806/config.yml
-```
 #### Using the GUIe
 
 When you run `config_writer.py`, it will first check the configuration file to
@@ -151,16 +168,13 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
 ## Contact
 
 Alejandro Alonso - [@twitter](https://twitter.com/MelenalexYT) - alexalongarci@gmail.com
+TODO: Add my contact information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments

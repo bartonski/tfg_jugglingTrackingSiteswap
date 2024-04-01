@@ -1,10 +1,9 @@
 # List of siteswaps (to change in the file name)
 siteswaps:
-  - "1"
   # - "31"
   # - "330"
   # - "40"
-  # - "3"
+  - "3"
   # - "423"
   # - "441"
   # - "531"
@@ -31,7 +30,7 @@ tracking_systems:
   - "BgSubstractionV0"       # Bg subtraction (first version)
 
 # Mask color range
-color_range: 168, 140, 69, 175, 255, 198  # h1, s1, v1, h2, s2, v2
+color_range: 107, 45, 23, 125, 255, 255 # h1, s1, v1, h2, s2, v2
 
 # List of names in the result table column
 table_field_names:
@@ -69,16 +68,16 @@ decimal_round: 3
 save_data: 2
 
 # Directory of the GroundTruth
-gt_dir: '/home/alex/tfg_jugglingTrackingSiteswap/results/mot16/GroundTruth/'
+gt_dir: './results/mot16/GroundTruth/'
 
 # Directory where the tracking files are saved
-tracking_dir: '/home/alex/tfg_jugglingTrackingSiteswap/results/mot16/Tracking/'
+tracking_dir: './results/mot16/Tracking/'
 
 # Directory of the dataset
-dataset_dir: '/home/alex/tfg_jugglingTrackingSiteswap/dataset/tanda2/'
+dataset_dir: './dataset/tanda2/'
 
 # Format of the name of the video files
-video_file_format: 'ss{}_red2_AlejandroAlonso.mp4'
+video_file_format: 'ss{}_blue_barton.mp4'
 
 # Format of the name of the GroundTruth files
 gt_file_format: "{}_manual2.txt"
