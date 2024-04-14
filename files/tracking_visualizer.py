@@ -24,7 +24,7 @@ output_path='./results/videos/'
 
 
 
-# Saca el color en hsv para poder hacerlos distintos y luego lo pasa a bgr
+# Calculate the color in hsv to be able to make them distinct, then return it as bgr
 def getDistinctColors(id, num_balls):
     h = (int(360/num_balls * id))
     r, g, b = cv2.cvtColor(np.uint8([[[h / 2, 255, 255]]]), cv2.COLOR_HSV2BGR)[0][0]
@@ -72,7 +72,7 @@ def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualiz
     colors = []
     for i in range(num_balls):
         colors.append(getDistinctColors(i, num_balls))
-    # Se reordenan los colores para separar los que son cromáticamente más parecidos e intentar evitar que aparezcan juntos
+    # Colors are rearranged to separate those that are chromatically more similar and try to prevent them from appearing together
     colors_reorder = [colors[i] for i in range(0, num_balls, 3)] + [colors[i] for i in range(1, num_balls, 3)] + [colors[i] for i in range(2, num_balls, 3)]
 
     hist = {}
@@ -83,7 +83,7 @@ def tracking_visualizer(ss, system, save_dir, dataset_dir, output_path, visualiz
             height, width, _ = img.shape
             img = cv2.copyMakeBorder(img, 0, 0, 0, img.shape[1], cv2.BORDER_CONSTANT, None, value = 0)
             for i in range(num_balls):
-                try: # Las coordenadas de la bola para ese frame puede ser None y salta excepcion con la división entera, además el último índice tampoco entra
+                try: # The coordinates of the ball for that frame can be None and it throws an exception with the integer division, also the last index does not enter
                     coords_x, coords_y = data[i][num_frame]
                     coords_x_padding = coords_x + width
                     if len(hist[i]) <= trayectory_limit:

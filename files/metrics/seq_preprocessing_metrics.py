@@ -4,7 +4,7 @@ from prediction.seq_preprocessing import point_extractor
 
 def distancia_y_rango(punto, point_pred, umbral):
     """
-    Calcula la distancia entre el punto dado y el punto (x,y),
+    Calculate the distance between the given point and the point (x,y),
     y determina si el punto está dentro del rango [(x-umbral,y-umbral),(x+umbral,y+umbral)].
 
     Argumentos:
@@ -19,16 +19,16 @@ def distancia_y_rango(punto, point_pred, umbral):
     - un booleano indicando si el punto está dentro del rango especificado
     """
     x,y = point_pred
-    # Calcula la distancia entre el punto dado y el punto (x,y)
+    # Calculate the distance between the given point and the point (x,y)
     distancia = math.sqrt((punto[0]-x)**2 + (punto[1]-y)**2)
 
-    # Determina si el punto está dentro del rango [(x-umbral,y-umbral),(x+umbral,y+umbral)]
+    # Determines if the point is within the range [(x-threshold,y-threshold),(x+threshold,y+threshold)]
     dentro_del_rango = (punto[0] >= x-umbral) and (punto[0] <= x+umbral) and (punto[1] >= y-umbral) and (punto[1] <= y+umbral)
 
-    # Retorna una tupla con la distancia y si está dentro del rango
+    # Returns a tuple with the distance and whether it is within the range
     return (distancia, dentro_del_rango)
 
-# Distancia respecto al punto GT y si el punto está en cierto rango
+# Distance from the GT point and whether the point is in a certain range
 
 if __name__ == "__main__":
     siteswaps = [('1', [557,900]),

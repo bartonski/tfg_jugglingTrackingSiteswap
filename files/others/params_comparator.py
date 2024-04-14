@@ -7,17 +7,17 @@ t_path = './AlejandroAlonso/results/mot16/Tracking/'
 ss=3
 directory = os.fsencode(t_path)
 
-# Crea un objeto Workbook para el archivo de Excel
+# Create a Workbook object for the Excel file
 workbook = Workbook()
 
-# Crea una hoja en el archivo de Excel
+# Create a sheet in the excel file
 worksheet = workbook.create_sheet(title='Resultados')
 
-# Escribe los encabezados de las columnas en la primera fila
+# Write the column headers in the first row
 encabezados = ["ss", "min_contour", "enclosing area", "arc","T. Perdido", "D. Perdidas", "D. Ruido", "ID swap", "nBalls", "<20%", "20%80%", ">80%", "Recall", "Precision", "MOTA", "MOTP"]
 worksheet.append(encabezados)
 
-# Escribe los datos en la hoja
+# Write the data on the sheet
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     print(filename)
@@ -32,5 +32,5 @@ for file in os.listdir(directory):
         tmp.extend(fila[1:])
         worksheet.append(tmp)
 
-# Guarda el archivo de Excel
+# Save the excel file
 workbook.save('tabla.xlsx')

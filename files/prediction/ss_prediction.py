@@ -54,9 +54,9 @@ def get_full_ss_string(throw_order):
 def get_ss_from_seq_non_0(throw_order: list(), test_numbers=5) -> str:
     ss = get_full_ss_string(throw_order)
     ss = ss.replace('-','')
-    # El periodo maximo es la longitud entre 2 porque el ss se tiene que repetir al menos 2 veces
+    # The maximum period is the length divided by 2 because the ss has to be repeated at least 2 times
     max_period = (len(ss)//2)
-    # El numero de comprobaciones es el recibido por parametro o el mas grande posible
+    # The number of checks is the one received per parameter or the largest possible
     if len(ss) <= max_period+test_numbers:
         test_numbers = len(ss)-max_period
 
@@ -65,7 +65,7 @@ def get_ss_from_seq_non_0(throw_order: list(), test_numbers=5) -> str:
     if period is None:
         return "NotFound", ss
 
-    # Comprueba la primera secuencia correcta de longitud=periodo y la devuelve como ss
+    # Checks for the first correct sequence of length=period and returns it as ss
     for i in range(index, len(ss)-period):
         sum_values = 0
         for j in range(period):
@@ -77,9 +77,9 @@ def get_ss_from_seq_non_0(throw_order: list(), test_numbers=5) -> str:
 def get_ss_from_seq_0(throw_order: list(), test_numbers=5) -> str:
     ss = get_full_ss_string(throw_order)
     ss = ''.join([char if id != -1 else '0' for char, id in zip(ss, throw_order)])
-    # El periodo maximo es la longitud entre 2 porque el ss se tiene que repetir al menos 2 veces
+    # The maximum period is the length divided by 2 because the ss has to be repeated at least 2 times
     max_period = (len(ss)//2)
-    # El numero de comprobaciones es el recibido por parametro o el mas grande posible
+    # The number of checks is the one received per parameter or the largest possible
     if len(ss) <= max_period+test_numbers:
         test_numbers = len(ss)-max_period
 
@@ -88,7 +88,7 @@ def get_ss_from_seq_0(throw_order: list(), test_numbers=5) -> str:
     if period is None:
         return "NotFound", ss
 
-    # Comprueba la primera secuencia correcta de longitud=periodo y la devuelve como ss
+    # Checks for the first correct sequence of length=period and returns it as ss
     for i in range(index, len(ss)-period):
         sum_values = 0
         for j in range(period):
@@ -112,7 +112,7 @@ def prediction(throw_order: list(), num_balls, test_numbers=5) -> str:
 
 
 def ss_validity_checker(ss: str, num_balls: int) -> bool:
-    # La media del ss es el numero de bolas
+    # The mean of the ss is the number of balls
     totalSum = 0
     for c in ss:
         totalSum += int(c)
@@ -120,7 +120,7 @@ def ss_validity_checker(ss: str, num_balls: int) -> bool:
     if totalSum/len(ss) != num_balls:
         return False
     
-    # Ninguna cifra puede estar seguida N turnos despues por otra cifra que sea N turnos menor
+    # No number can be followed N turns later by another number that is N turns less
     start=0
     while start<len(ss):
         for c in itertools.islice(ss,start+1,None):

@@ -49,7 +49,7 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
 
     overlaps = set()
 
-    # Usa el threshold como una distancia, entonces elimina las regiones mas pequeñas que esten demasiado cerca
+    # Use the threshold as a distance, then remove smaller regions that are too close
     if use_distance:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
@@ -58,11 +58,11 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 dist = np.linalg.norm(np.array(point1) - np.array(point2))
                 if dist < threshold_value:
                     overlaps.add(j)
-    # Usa el threshold para comprobar la interseccion, de forma que elimina regiones superpuestas en demasiada medida
+    # Use the threshold to check for intersection, thus removing too much overlapping regions
     else:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
-                # Saco rectangulos que definen cada contorno
+                # Draw rectangles that define each contour
                 (x1,y1,w1,h1) = cv2.boundingRect(contours[i])
                 (x2,y2,w2,h2) = cv2.boundingRect(contours[j])
                 a = (x1, y1)
@@ -71,13 +71,13 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 d = (x2+w2, y2+h2)
                 width = min(b[0], d[0]) - max(a[0], c[0])
                 height = min(b[1], d[1]) - max(a[1], c[1])
-                # Si hay alguna interseccion
+                # If there is any intersection
                 if min(width,height) > 0:
                     intersection = width*height
                     area1 = (b[0]-a[0])*(b[1]-a[1])
                     area2 = (d[0]-c[0])*(d[1]-c[1])
                     union = area1 + area2 - intersection
-                    # Si la interseccion es suficientemente grande la marco como overlap
+                    # If the intersection is large enough I mark it as an overlap
                     overlap=intersection/union
                     if overlap > threshold_value:
                         overlaps.add(j)
@@ -131,20 +131,20 @@ def color_tracking_max_balls(source_path, hsv_range, non_max_suppresion_threshol
         # If there are contours found in the image:
         if len(contours)>0:
             contours = contours_non_max_suppression(contours, non_max_suppresion_threshold)
-            # Saca los centros de los contornos para trabajar con ellos
+            # Get the centers of the contours to work with them
             contours = [contour_center(c) for c in contours if contour_center(c) != (0,0)]
             if len(ids) == 0:
                 #Si tengo mas detecciones que bolas quito las ultimas detecciones (TODO igual hay mejor forma, quitarlo en funcion de un roi o algo asi)
                 contours = contours[:max_balls]
-                # Creo los ids de cada contorno
+                # I create the ids of each contour
                 for c in contours:
                     new_id_dict = kpu.init_id_dict(c, frame_number)
                     ids[len(ids)] = new_id_dict
             else:
-                # Actualizo los ids que tengo con las detecciones nuevas
+                # Update the ids with the new detections
                 if len(contours) > 0:
                     kpu.update_ids(ids, contours, frame_number, max_balls=max_balls)
-                # En caso de haber perdido alguna detección, la actualizo con su predicción
+                # In case I have missed -i any detection, I update it with its prediction
                 kpu.update_lost_detections(ids)
 
             for key in ids:

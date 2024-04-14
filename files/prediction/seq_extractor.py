@@ -24,9 +24,9 @@ def seq_extraction(ids):
     throws = []
     for key in ids:
         elem = ids[key]
-        # Esto interpola las posiciones donde en vez de una coordenada se tiene None
+        # This interpolates the positions where instead of a coordinate we have None
         elem['y'] = pandas.Series(elem['y']).interpolate().values.round(2).tolist()
-        # Son máximos porque las coordenadas se cuentan desde arriba
+        # They are maximum because the coordinates are counted from above (translation?)
         local_mins = argrelmax(np.array(elem['y']), order=2)[0]
         for min in local_mins:
             throws.append((elem['Start']+min,key))
@@ -61,17 +61,17 @@ def seq_extraction_cuadrants(ids, point, img_threshold=0, img_width=0):
                 curr_x = keys_info[key]['x'][num_frames-1]
                 curr_y = keys_info[key]['y'][num_frames-1]
 
-                # Distancias entre los ejes y nuestras coordenadas para comprobar si los cruzamos
+                # Distances between the axes and our coordinates to check if we cross them
                 curr_x_dist = curr_x - point_x
                 curr_y_dist = curr_y - point_y
                 if keys_info[key]['posible_throw_frame'] != 0 and abs(curr_x_dist) > img_threshold:
                     keys_info[key]['posible_throw_frame'] = 0
                     throw_info.append((num_frames-1, key, keys_info[key]['posible_throw_dir']))
-                if keys_info[key]['throw_counted'] == False and keys_info[key]['prev_x_dist'] != None: # Si no es la primera iteración o no hemos contado ya este lanzamiento
-                    if curr_x_dist * keys_info[key]['prev_x_dist']<=0: # Cruzar el eje vertical en cualquiera de las dos direcciones cambia el signo de esta multiplicación
+                if keys_info[key]['throw_counted'] == False and keys_info[key]['prev_x_dist'] != None: # If it's not the first iteration or we haven't already counted this release
+                    if curr_x_dist * keys_info[key]['prev_x_dist']<=0: # Crossing the vertical axis in either direction changes the sign of this multiplication
                         keys_info[key]['throw_counted'] = True
                         keys_info[key]['posible_throw_frame'] = num_frames
-                        # Comprueba la mano que ha realizado el lanzamiento
+                        # Check the hand that made the throw
                         if curr_x_dist < 0:
                             keys_info[key]['last_dir'] = 'l'
                         elif curr_x_dist > 0:
@@ -83,17 +83,17 @@ def seq_extraction_cuadrants(ids, point, img_threshold=0, img_width=0):
                                 keys_info[key]['last_dir'] = 'r'
                         keys_info[key]['posible_throw_dir'] = keys_info[key]['last_dir']
 
-                    elif keys_info[key]['prev_y_dist'] > 0 and curr_y_dist <= 0: # Cruzar el eje vertical de abajo a arriba cumple esto
+                    elif keys_info[key]['prev_y_dist'] > 0 and curr_y_dist <= 0: # Crossing the vertical axis from bottom to top fulfills
                         keys_info[key]['throw_counted'] = True
                         keys_info[key]['posible_throw_frame'] = num_frames
-                        # Comprueba la mano que ha realizado el lanzamiento
+                        # Check the hand that made the throw
                         if curr_x_dist < 0:
                             keys_info[key]['last_dir'] = 'r'
                         elif curr_x_dist > 0:
                             keys_info[key]['last_dir'] = 'l'
                         keys_info[key]['posible_throw_dir'] = keys_info[key]['last_dir']
                 else:
-                    if num_frames > 2 and num_frames <= len(keys_info[key]['x'])-1 and cambio_direccion(keys_info[key]['x'][num_frames-2],curr_x,keys_info[key]['x'][num_frames]): # Comprueba los cambios de dirección para saber si se ha hecho otro lanzamiento
+                    if num_frames > 2 and num_frames <= len(keys_info[key]['x'])-1 and cambio_direccion(keys_info[key]['x'][num_frames-2],curr_x,keys_info[key]['x'][num_frames]): # Check address changes to see if another throw has been made
                         keys_info[key]['throw_counted'] = False
 
                 keys_info[key]['prev_x_dist']= curr_x_dist

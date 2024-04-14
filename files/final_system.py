@@ -80,17 +80,17 @@ def execute(evaluate = False, tracking_system = "", color_range = None, max_ball
             if tracking_system == "ColorTrackingMaxBalls":
                 if max_balls == None or color_range == None:
                       raise Exception("ColorTrackingMaxBalls - Wrong parameters")
-                color_tracking_max_balls(source_path, color_range, max_balls = max_balls,visualize=False, save_data=save_data)
+                color_tracking_max_balls(source_path, color_range, max_balls = max_balls,visualize=True, save_data=save_data)
             elif tracking_system == "ColorTrackingV0":
                 if color_range == None:
                      raise Exception("ColorTrackingV0 - Wrong parameters")
-                color_tracking(source_path, color_range, visualize=False, save_data=save_data)
+                color_tracking(source_path, color_range, visualize=True, save_data=save_data)
             elif tracking_system == "BgSubstractionMaxBalls":
                 if max_balls == None:
                     raise Exception("BgSubstractionMaxBalls - Wrong parameters")
-                bg_substraction_tracking_max_balls(source_path, max_balls=max_balls, visualize=False, save_data=save_data)
+                bg_substraction_tracking_max_balls(source_path, max_balls=max_balls, visualize=True, save_data=save_data)
             elif tracking_system == "BgSubstractionV0":
-                bg_substraction_tracking(source_path, visualize=False, save_data=save_data)
+                bg_substraction_tracking(source_path, visualize=True, save_data=save_data)
             else:
                 raise Exception("Wrong tracking system")
 
@@ -176,10 +176,10 @@ if __name__ == "__main__":
     table.field_names = config['table_field_names']
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Para cada valor de 'param' creamos un objeto Future que ejecuta la función 'test'
+        # For each value of 'param' we create a Future object that executes the 'test' function
         futures = {executor.submit(execute, evaluate, tracking_systems[0], color_range, int(sum(int(char) for char in ss) / len(ss)), tracking_preprocessing, max_cuadrant_misses, ss_test_numbers, max_perido_threshold, decimal_round, ss, save_data): (ss) for ss in siteswaps}
 
-        # Esperamos a que todas las ejecuciones de la función 'test' terminen
+        # Wait for all executions of the 'test' function to finish
         concurrent.futures.wait(futures)
     
     for future in futures:

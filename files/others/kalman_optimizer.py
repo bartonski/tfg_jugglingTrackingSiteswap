@@ -40,8 +40,8 @@ def kalman_tester(gt_path,dt, u_x, u_y, std_acc, x_std_meas, y_std_meas):
     return total_dist, gt_path, dt, u_x, u_y, std_acc, x_std_meas, y_std_meas
 
 def test(ss):
-    # Esta es la función que se ejecutará con diferentes valores de 'param'
-    # En este ejemplo simplemente se devuelve el valor de 'param' elevado al cuadrado
+    # This is the function that will be executed with different 'param' values
+    # This example simply returns the value of 'param' squared
     gt_path = './AlejandroAlonso/results/mot16/GroundTruth/'+str(ss[0])+'_manual.txt'
 
     best_results = []
@@ -62,11 +62,11 @@ def test(ss):
                             #print("{:.2f} - ss{}".format(result, ss[0]))
                             count_ystdmemas +=1
                             if len(best_results) < 10 or result < best_results[-1][0]:
-                                # Agregar el resultado a la lista de mejores resultados y ordenar la lista
+                                # Add the result to the top results list and sort the list
                                 best_results.append((round(result,2), dt, u_x, u_y, std_acc, x_std_meas, y_std_meas, ss[0]))
                                 best_results.sort()
 
-                                # Si la lista tiene más de 10 elementos, eliminar el peor resultado
+                                # If the list has more than 10 elements, remove the worst result
                                 if len(best_results) > 10:
                                     del best_results[-1]
 
@@ -100,7 +100,7 @@ def test(ss):
     return best_results
 
 def main():
-    # Lista de valores de 'param' que se utilizarán en las ejecuciones de la función 'test'
+    # List of 'for' values that are used -i in executions of the 'test' function
     siteswaps = [(1,1), (3,3), (441,3), (423,3)]
     dts = np.arange(0.1, 1.1, 0.1)
     u_xs = range(1,61,1)
@@ -112,14 +112,14 @@ def main():
     num_batchs = 100
 
     """
-    # Creamos un objeto de tipo ThreadPoolExecutor para ejecutar las funciones en paralelo
+    # We create an object of type ThreadPoolExecutor to execute the functions in parallel
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Para cada valor de 'param' creamos un objeto Future que ejecuta la función 'test'
+        # For each value of 'param' we create a Future object that executes the 'test' function
         futures = {executor.submit(test, ss) for ss in siteswaps}
-        # Esperamos a que todas las ejecuciones de la función 'test' terminen
+        # Wait for all executions of the 'test' function to finish
         concurrent.futures.wait(futures)
 
-        # Escribir los resultados a un fichero "res_concretos.txt" con formato: ss -> result
+        # Write the results to a file "res_concretos.txt" with format: ss -> result
         with open("./AlejandroAlonso/results/mot16/Optimizer/res_concretos.txt", "w") as f:
             for future in futures:
                 for result, dt, u_x, u_y, std_acc, x_std_meas, y_std_meas, ss in future.result():
@@ -127,11 +127,11 @@ def main():
     """
     
     for i in range(num_batchs):
-        # Creamos un objeto de tipo ThreadPoolExecutor para ejecutar las funciones en paralelo
+        # We create an object of type ThreadPoolExecutor to execute the functions in parallel
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Para cada valor de 'param' creamos un objeto Future que ejecuta la función 'test'
+            # For each value of 'param' we create a Future object that executes the 'test' function
             futures = []
-            for _ in range(test_batch): # num_tests es el número de pruebas que quieres realizar
+            for _ in range(test_batch): # num_tests is the number of tests you want to perform
                 ss = random.choice(siteswaps)
                 dt = random.choice(dts)
                 u_x = random.choice(u_xs)
@@ -141,10 +141,10 @@ def main():
                 y_std_meas = random.choice(y_std_meass)
                 futures.append(executor.submit(kalman_tester, './AlejandroAlonso/results/mot16/GroundTruth/'+str(ss[0])+'_manual.txt', dt, u_x, u_y, std_acc, x_std_meas, y_std_meas))
 
-                # Esperamos a que todas las ejecuciones de la función 'test' terminen
+                # Wait for all executions of the 'test' function to finish
                 concurrent.futures.wait(futures)
 
-                # Escribir los resultados a un fichero "res_random.txt" con formato: ss_dt_ux_uy_stdacc_xstdmeas_ystdmeas -> result
+                # Write the results to a file "res_random.txt" with format: ss_dt_ux_uy_stdacc_xstdmeas_ystdmeas -> result
                 with open("./AlejandroAlonso/results/mot16/Optimizer/res_random_"+str(i)+".txt", "w") as f:
                     for future in futures:
                         total_dist, gt_path, dt, u_x, u_y, std_acc, x_std_meas, y_std_meas = future.result()

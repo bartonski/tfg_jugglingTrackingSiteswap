@@ -28,12 +28,12 @@ list_count = list(count_dict.items())
 
 x, y = zip(*list_count)
 
-# Crear el gráfico
+# Create the chart
 plt.plot(x, y)
 plt.xlabel('test_numbers')
 plt.ylabel('num_aciertos')
 
-# Mostrar el gráfico
+# Show the chart
 plt.show()
 
 """ result = lista_ordenada = sorted(list(count_dict.items()), key=lambda x: x[1], reverse=True)

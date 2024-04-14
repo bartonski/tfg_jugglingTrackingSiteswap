@@ -10,7 +10,7 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
 
     overlaps = set()
 
-    # Usa el threshold como una distancia, entonces elimina las regiones mas pequeñas que esten demasiado cerca
+    # Use the threshold as a distance, then remove smaller regions that are too close
     if use_distance:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
@@ -19,11 +19,11 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 dist = np.linalg.norm(np.array(point1) - np.array(point2))
                 if dist < threshold_value:
                     overlaps.add(j)
-    # Usa el threshold para comprobar la interseccion, de forma que elimina regiones superpuestas en demasiada medida
+    # Use the threshold to check for intersection, thus removing regions that overlap too much
     else:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
-                # Saco rectangulos que definen cada contorno
+                # Draw rectangles that define each contour 
                 (x1,y1,w1,h1) = cv2.boundingRect(contours[i])
                 (x2,y2,w2,h2) = cv2.boundingRect(contours[j])
                 a = (x1, y1)
@@ -32,13 +32,13 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 d = (x2+w2, y2+h2)
                 width = min(b[0], d[0]) - max(a[0], c[0])
                 height = min(b[1], d[1]) - max(a[1], c[1])
-                # Si hay alguna interseccion
+                # If there is any intersection
                 if min(width,height) > 0:
                     intersection = width*height
                     area1 = (b[0]-a[0])*(b[1]-a[1])
                     area2 = (d[0]-c[0])*(d[1]-c[1])
                     union = area1 + area2 - intersection
-                    # Si la interseccion es suficientemente grande la marco como overlap
+                    # If the intersection is large enough, mark it as an overlap
                     overlap=intersection/union
                     if overlap > threshold_value:
                         overlaps.add(j)
@@ -58,13 +58,13 @@ def fill_contours(contours):
     filled_contours = []
 
     for contour in contours:
-        # Obtener el contorno relleno como una lista de puntos
+        # Get the filled outline as a list of points
         filled_contour = cv2.approxPolyDP(contour, 3, True)
 
-        # Agregar el punto inicial al final de la lista para cerrar el contorno
+        # Add the start point to the end of the list to close the contour
         filled_contour = np.concatenate((filled_contour, filled_contour[0].reshape(1, -1)))
 
-        # Agregar el contorno relleno a la lista de contornos rellenos
+        # Add the filled outline to the list of filled outlines
         filled_contours.append(filled_contour)
 
     return filled_contours
@@ -93,11 +93,11 @@ def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_m
         if visualize:
             img_copy = img.copy()
 
-        mask = object_detector.apply(img) # Básicamente la máscara es aplicar BackgroundSubstractor con 100 y 40 a toda la imagen
+        mask = object_detector.apply(img) # Basically the mask is to apply BackgroundSubstractor with 100 and 40 to the whole image (translation?)
 
-        _, mask = cv2.threshold( mask, 254, 255, # Se pasa la máscara por un threshold de grises
+        _, mask = cv2.threshold( mask, 254, 255, # The mask is passed -i through a gray threshold
                                     cv2.THRESH_BINARY )
-        contours, _ = cv2.findContours( mask, # Desde el resultado de esa máscara se sacan los contornos
+        contours, _ = cv2.findContours( mask, # From the result of that mask the contours are extracted
                                         cv2.RETR_TREE,
                                         cv2.CHAIN_APPROX_SIMPLE )
         true_contours = []
@@ -137,7 +137,7 @@ def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_m
 
         num_frames += 1 
 
-    # Se obtiene el punto del eje x en el que se separan los dos clusters de detecciones
+    # The point on the x-axis is obtained where the two detection clusters separate
     column_sums = np.sum(hist, axis=1)
     smooth = gaussian_filter1d(column_sums, 10)
     x_range = np.where(smooth > (0.2 * np.max(smooth)))[0]
@@ -148,7 +148,7 @@ def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_m
     else:
         x_mid_point = np.where(smooth == np.min(smooth[local_mins+x_range[0]]))[0][0]
 
-    # Se obtiene el punto del eje y que marca la zona superior de los clusters
+    # The point of the y-axis that marks the upper zone of the clusters is obtained.
     row_sums = np.sum(hist, axis=0)
     threshold = row_sums.max()*y_mul_threshold
     y_mid_point = 0
@@ -169,11 +169,11 @@ def point_extractor(source_path, min_contour_area=2500, x_mul_threshold=0.6, y_m
     plt.title('Mapa de calor del movimiento en el video')
     plt.show() """
 
-    return int(x_mid_point), int(max_y-y_mid_point) # La resta para poner el 0,0 arriba a la izquierda
+    return int(x_mid_point), int(max_y-y_mid_point) # The subtraction to put the 0,0 top left
 
 
 if __name__ == "__main__":
     source_path = './dataset/tanda2/ss7corto_red2_AlejandroAlonso.mp4'
     #source_path = './dataset/jugglingLab/ss4_red_JugglingLab.mp4'
     print(point_extractor(source_path, visualize=False, min_contour_area=3000))
-    # TODO limitar el tiempo, por ejemplo los 10 segundos del medio o algo así
+    # TODO limit time, for example the middle 10 seconds or something like that

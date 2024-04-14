@@ -40,10 +40,10 @@ def main():
     min_areas = range(1750,2751,50) #1750 - 2250 hacen 12
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Para cada valor de 'param' creamos un objeto Future que ejecuta la función 'test'
+        # For each value of 'param' we create a Future object that executes the 'test' function
         futures = {executor.submit(test, min_area): (min_area) for min_area in min_areas}
 
-        # Esperamos a que todas las ejecuciones de la función 'test' terminen
+        # Wait for all executions of the 'test' function to finish
         concurrent.futures.wait(futures)
         with open("./AlejandroAlonso/results/res_seq_preprocessing_optimizer.txt", "w") as f:
             for future in futures:

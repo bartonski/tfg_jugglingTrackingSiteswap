@@ -41,7 +41,7 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
 
     overlaps = set()
 
-    # Usa el threshold como una distancia, entonces elimina las regiones mas pequeñas que esten demasiado cerca
+    # Use the threshold as a distance, then remove smaller regions that are too close
     if use_distance:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
@@ -50,11 +50,11 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 dist = np.linalg.norm(np.array(point1) - np.array(point2))
                 if dist < threshold_value:
                     overlaps.add(j)
-    # Usa el threshold para comprobar la interseccion, de forma que elimina regiones superpuestas en demasiada medida
+    # Use the threshold to check for intersection, thus removing regions that overlap too much
     else:
         for i in range(len(contours)):
             for j in range(i+1, len(contours)):
-                # Saco rectangulos que definen cada contorno
+                # Draw rectangles that define each contour 
                 (x1,y1,w1,h1) = cv2.boundingRect(contours[i])
                 (x2,y2,w2,h2) = cv2.boundingRect(contours[j])
                 a = (x1, y1)
@@ -63,13 +63,13 @@ def contours_non_max_suppression(contours, threshold_value, use_distance=True):
                 d = (x2+w2, y2+h2)
                 width = min(b[0], d[0]) - max(a[0], c[0])
                 height = min(b[1], d[1]) - max(a[1], c[1])
-                # Si hay alguna interseccion
+                # If there is any intersection
                 if min(width,height) > 0:
                     intersection = width*height
                     area1 = (b[0]-a[0])*(b[1]-a[1])
                     area2 = (d[0]-c[0])*(d[1]-c[1])
                     union = area1 + area2 - intersection
-                    # Si la interseccion es suficientemente grande la marco como overlap
+                    # If the intersection is large enough I mark it as an overlap
                     overlap=intersection/union
                     if overlap > threshold_value:
                         overlaps.add(j)
@@ -110,9 +110,9 @@ def color_bg_substraction_tracking(source_path, hsv_range, non_max_suppresion_th
         
         # Tracking BgSubstraction
         mask = object_detector.apply(img)
-        _, mask = cv2.threshold( mask, 254, 255, # Se pasa la máscara por un threshold de grises
+        _, mask = cv2.threshold( mask, 254, 255, # The mask is passed -i through a gray threshold
                                     cv2.THRESH_BINARY )
-        contours_bg, _ = cv2.findContours( mask, # Desde el resultado de esa máscara se sacan los contornos
+        contours_bg, _ = cv2.findContours( mask, # From the result of that mask the contours are extracted
                                         cv2.RETR_TREE,
                                         cv2.CHAIN_APPROX_SIMPLE )
 
@@ -120,9 +120,9 @@ def color_bg_substraction_tracking(source_path, hsv_range, non_max_suppresion_th
         circle_contours = []
         for c in contours_bg:
             area = cv2.contourArea(c)
-            # Se comprueba que tenga cierto tamaño de area, y luego que, o bien el minimo circulo que se le pueda hacer al contorno alrededor tenga un area parecida,
-            # o bien que la forma geometrica mas parecida al contorno tenga al menos 4 lados y sea convexo
-            # Es decir, se intenta detectar una forma circular con cierta area
+            # It is verified that it has a certain area size, and then that either the minimum circle that can be made around the contour has a similar area,
+            # or that the geometric shape most similar to the contour has at least 4 sides and is convex.
+            # That is, it tries to detect a circular shape with a certain area
             if area > min_contour_area:
                 _, radius = cv2.minEnclosingCircle(c)
                 enclosing_area = np.pi * radius * radius
@@ -143,18 +143,18 @@ def color_bg_substraction_tracking(source_path, hsv_range, non_max_suppresion_th
         # If there are contours found in the image:
         if len(contours)>0:
             contours = contours_non_max_suppression(contours, non_max_suppresion_threshold)
-            # Saca los centros de los contornos para trabajar con ellos
+            # Get the centers of the contours to work with them
             contours = [contour_center(c) for c in contours if contour_center(c) != (0,0)]
             if len(ids) == 0:
-                # Creo los ids de cada contorno
+                # I create the ids of each contour
                 for c in contours:
                     new_id_dict = kpu.init_id_dict(c)
                     ids[len(ids)] = new_id_dict
             else:
-                # Actualizo los ids que tengo con las detecciones nuevas
+                # Update the ids with the new detections
                 #if len(contours) > 0:
                 kpu.update_ids(ids, contours)
-                # En caso de haber perdido alguna detección, la actualizo con su predicción
+                # In case I have missed -i any detection, I update it with its prediction
                 kpu.update_lost_detections(ids)
 
             for key in ids:

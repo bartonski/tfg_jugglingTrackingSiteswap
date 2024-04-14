@@ -19,7 +19,7 @@ def contour_center(c):
     return center
 
 
-# Pilla el color más detectado y hace un rango desde ahi
+# Get the most detected color and range from there
 def bg_substraction_tracking(source_path, min_contour_area=1000, enclosing_area_diff=0.5, arc_const=0.1, save_data=-1, visualize=False):
     try:
         ss= re.search(r"ss(\d+)", source_path).group(1)
@@ -48,20 +48,20 @@ def bg_substraction_tracking(source_path, min_contour_area=1000, enclosing_area_
         if visualize:
             img_copy = img.copy()
 
-        mask = object_detector.apply(img) # Básicamente la máscara es aplicar BackgroundSubstractor con 100 y 40 a toda la imagen
+        mask = object_detector.apply(img) # Basically the mask is to apply BackgroundSubstractor with 100 and 40 to the whole image
 
-        _, mask = cv2.threshold( mask, 254, 255, # Se pasa la máscara por un threshold de grises
+        _, mask = cv2.threshold( mask, 254, 255, # The mask is passed -i through a gray threshold
                                     cv2.THRESH_BINARY )
-        contours, _ = cv2.findContours( mask, # Desde el resultado de esa máscara se sacan los contornos
+        contours, _ = cv2.findContours( mask, # From the result of that mask the contours are extracted
                                         cv2.RETR_TREE,
                                         cv2.CHAIN_APPROX_SIMPLE )
 
         circle_contours = []
         for c in contours:
             area = cv2.contourArea(c)
-            # Se comprueba que tenga cierto tamaño de area, y luego que, o bien el minimo circulo que se le pueda hacer al contorno alrededor tenga un area parecida,
-            # o bien que la forma geometrica mas parecida al contorno tenga al menos 4 lados y sea convexo
-            # Es decir, se intenta detectar una forma circular con cierta area
+            # It is verified that it has a certain area size, and then that either the minimum circle that can be made around the contour has a similar area,
+            # or that the geometric shape most similar to the contour has at least 4 sides and is convex.
+            # That is, it tries to detect a circular shape with a certain area
             if area > min_contour_area:
                 _, radius = cv2.minEnclosingCircle(c)
                 enclosing_area = np.pi * radius * radius
@@ -71,13 +71,13 @@ def bg_substraction_tracking(source_path, min_contour_area=1000, enclosing_area_
 
         if len(circle_contours) > 0:
             if len(ids) == 0:
-                # Creo los ids de cada contorno
+                # I create the ids of each contour
                 for c in circle_contours:
                     new_id_dict = kpu.init_id_dict(c, current_frame, dt=0.1, u_x=15, u_y=30, std_acc=30, x_std_meas=0.1, y_std_meas=0.1)
                     ids[len(ids)] = new_id_dict
             else:
                 kpu.update_ids(ids, circle_contours, current_frame, dt=0.1, u_x=15, u_y=30, std_acc=30, x_std_meas=0.1, y_std_meas=0.1)
-                # En caso de haber perdido alguna detección, la actualizo con su predicción
+                # In case I have missed -i any detection, I update it with its prediction
                 kpu.update_lost_detections(ids)             
 
         for key in ids:

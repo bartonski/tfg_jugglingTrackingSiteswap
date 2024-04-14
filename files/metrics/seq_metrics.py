@@ -47,18 +47,18 @@ if __name__ == "__main__":
     color_range = 35,30,150,185,120,255
 
 
-    # Dos formas, desde GT, y desde tracking (mejor de los que tenga)
+    # Two ways, from GT, and from tracking (better than the ones you have)
 
 
-    # Sacar para cada forma y para cada ss:
-        # Distancia edición secuencia respecto GT
-        # Num misses en caso de seq2
-        # Funcionamiento después con la función del ss:
-            # Resultado obtenido
-            # Distancia edición del ss respecto al GT
-            # Si el ss GT está al menos presente en el resultado, y en caso afirmativo su %
-            # Si el periodo del resultado es el del GT
-            # Si funciona perfecto
+    # Take out for each shape and for each ss:
+        # Sequence editing distance with respect to GT
+        # Num misses in case of seq2
+        # Running next with the ss function:
+            # Obtained result
+            # Distance edition of the ss with respect to the GT (translation??)
+            # If the ss GT is at least present in the result, and if so its %
+            # If the period of the result is that of the GT
+            # if it works perfectly
     for source in sources:
         print(source)
         table = PrettyTable()
